@@ -21,8 +21,8 @@ class presenter_screen : public wxFrame
 protected:
     wxToolBar *toolbar_;
     slide_screen *presentation_;
-	poppler_document pdf_;
-    
+    poppler_document pdf_;
+
     size_t slide_nr_;
     void load_slide(size_t slide_nr);
 

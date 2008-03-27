@@ -13,10 +13,12 @@ protected:
 
     poppler_document pdf_;
     wxBitmap current_slide_;
+    size_t slide_nr_;
 
 public:
     slide_screen(wxFrame *parent, poppler_document& pdf);
     void change_slide(size_t slide_nr);
+    void refresh();
 
     DECLARE_EVENT_TABLE()
 };
