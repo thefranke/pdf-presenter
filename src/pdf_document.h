@@ -19,7 +19,7 @@ public:
     virtual void load(const char* filename) = 0;
     virtual raw_image render(size_t page_nr, size_t& width, size_t& height) = 0;
     virtual size_t page_count() const = 0;
-	virtual float page_size_ratio(size_t page_nr) const = 0;
+    virtual float page_size_ratio(size_t page_nr) const = 0;
     virtual void cleanup() = 0;
 
     virtual double get_width_inch(size_t page_nr) const = 0;
@@ -36,7 +36,7 @@ public:
     void load(const char* filename);
     raw_image render(size_t page_nr, size_t& width, size_t& height);
     size_t page_count() const;
-	float page_size_ratio(size_t page_nr) const;
+    float page_size_ratio(size_t page_nr) const;
     void cleanup();
 
     double get_width_inch(size_t page_nr) const
@@ -48,17 +48,7 @@ public:
     {
         return doc_->getPageMediaHeight(static_cast<int>(page_nr));
     }
-	
-	poppler_document() {}    
+
+    poppler_document() {}    
     ~poppler_document() { cleanup(); }
 };
-
-/*
-class fitz_document : public pdf_document
-{
-public:
-    void load(const char* filename);
-    raw_image render(size_t page_nr);
-    size_t page_count();
-};
-*/

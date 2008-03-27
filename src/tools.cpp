@@ -18,7 +18,7 @@ void get_screen_dpi(double *w, double *h)
     // figure out dpi of screen (1 inch = 25.4 milimeter)
     double inch_w, inch_h;
     get_screen_inch(&inch_w, &inch_h);
-    
+
     int pix_w, pix_h;
     ::wxDisplaySize(&pix_w, &pix_h);
     *w = static_cast<double>(pix_w)/inch_w;
