@@ -6,13 +6,20 @@
 
 #include <GlobalParams.h>
 #include <SplashBitmap.h>
-#include <Object.h> /* must be included before SplashOutputDev.h because of sloppiness in SplashOutputDev.h */
+#include <Object.h>
 #include <SplashOutputDev.h>
 #include <PDFDoc.h>
 
 //typedef boost::shared_array<unsigned char> raw_image;
 typedef unsigned char* raw_image;
 
+/*!
+ * \brief Pure abstract base for a PDF document container
+ *
+ * This base class ensures that a PDF document can be loaded from a file
+ * and rendered into a raw image pointer, which then can be used with
+ * any image container.
+ */
 class pdf_document
 {
 public:
@@ -26,6 +33,9 @@ public:
     virtual double get_height_inch(size_t page_nr) const = 0;
 };
 
+/*!
+ * \brief A pdf_document implementation with the poppler library.
+ */
 class poppler_document : public pdf_document
 {
 protected:
