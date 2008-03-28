@@ -33,19 +33,14 @@ void poppler_document::load(const char* filename)
         else
             throw std::runtime_error("Output dev not initialized");
     }
-
-    /*	
-    // what's this for?
-    _linksForPage = (Links**)malloc(page_count() * sizeof(Links*));
-    if (!_linksForPage) return false;
-    for (int i=0; i < _pageCount; i++)
-    _linksForPage[i] = NULL;
-    */
 }
 
 size_t poppler_document::page_count() const
 {
-    return static_cast<size_t>(doc_->getNumPages());
+    if (doc_)
+        return static_cast<size_t>(doc_->getNumPages());
+    else
+        return 0;
 }
 
 float poppler_document::page_size_ratio(size_t page_nr) const
@@ -56,7 +51,8 @@ float poppler_document::page_size_ratio(size_t page_nr) const
 
 raw_image poppler_document::render(size_t page_nr, size_t& width, size_t& height)
 {
-    assert(output_dev_);
+    if (!output_dev_)
+        return 0;
 
     const double dpi = get_pdf_doc_dpi(get_width_inch(page_nr), get_height_inch(page_nr), width, height);
 

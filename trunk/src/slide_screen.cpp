@@ -1,22 +1,29 @@
 // pdf-presenter (c) 2008 Tobias Alexander Franke. Please see license.txt.
 #include "slide_screen.h"
 #include "pdf_presenter.h"
+#include "tools.h"
 
 BEGIN_EVENT_TABLE(slide_screen, wxFrame)
     EVT_KEY_DOWN(slide_screen::on_key)
     EVT_CLOSE(slide_screen::on_close)
     EVT_LEFT_DCLICK(slide_screen::on_click)
     EVT_PAINT(slide_screen::on_paint)
+    EVT_SIZE(slide_screen::on_resize)
 END_EVENT_TABLE()
 
 slide_screen::slide_screen(wxFrame *parent, poppler_document& pdf) : 
 wxFrame(parent, -1, wxT(APPNAME)), pdf_(pdf)
 {}
 
+void slide_screen::on_resize(wxSizeEvent &e)
+{
+    refresh();
+}
+
 void slide_screen::on_key(wxKeyEvent &e)
 {
     // if the usual "fullscreen" keycombo was pressed
-    if (((e.AltDown() || e.CmdDown()) && e.GetKeyCode() == WXK_RETURN) ||
+    else if (((e.AltDown() || e.CmdDown()) && e.GetKeyCode() == WXK_RETURN) ||
         (e.CmdDown() && e.GetKeyCode() == 'F'))
     {
         ShowFullScreen(!IsFullScreen());
@@ -51,21 +58,31 @@ void slide_screen::on_paint(wxPaintEvent &e)
 {
     wxPaintDC dc(this);
 
+    int iw, ih; 
+
+    // paint background black
+    GetSize(&iw, &ih);
+    dc.SetBrush(wxBrush(*wxBLACK, wxSOLID));
+    dc.DrawRectangle(0, 0, iw, ih);
+
+    // center view
+    GetClientSize(&iw, &ih);
+    iw = (iw - current_slide_.GetWidth())/2;
+    ih = (ih - current_slide_.GetHeight())/2;
+
     if (current_slide_.Ok())
-        dc.DrawBitmap(current_slide_, 0, 0, true);
+        dc.DrawBitmap(current_slide_, iw, ih, true);
 }
 
-void slide_screen::change_slide(size_t slide_nr)
+void slide_screen::load_slide(size_t slide_nr)
 {
     slide_nr_ = slide_nr;
 
     int iw, ih; 
-    GetSize(&iw,&ih);
+    GetClientSize(&iw,&ih);
     size_t w=iw, h=ih;
 
-    raw_image pdf_bmp = pdf_.render(slide_nr, w, h);
-    wxImage pdf_image = wxImage(w, h, pdf_bmp);
-    current_slide_ = wxBitmap(pdf_image);
+    render_pdf_to(&pdf_, current_slide_, slide_nr, iw, ih);
 
     // force repaint
     Refresh();
@@ -73,5 +90,5 @@ void slide_screen::change_slide(size_t slide_nr)
 
 void slide_screen::refresh()
 {
-    change_slide(slide_nr_);
+    load_slide(slide_nr_);
 }

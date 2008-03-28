@@ -123,6 +123,7 @@
 				EnableIntrinsicFunctions="false"
 				FavorSizeOrSpeed="2"
 				OmitFramePointers="true"
+				AdditionalIncludeDirectories="&quot;C:\Dev\Libs\wxWidgets-2.8.7\src\jpeg&quot;"
 				PreprocessorDefinitions="_WIN32;WIN32;NDEBUG;_WINDOWS;USE_OWN_GET_AUTH_DATA;POPPLER_DATADIR=\&quot;\&quot;;ENABLE_ZLIB=1;ENABLE_LIBJPEG=1"
 				ExceptionHandling="1"
 				RuntimeLibrary="0"

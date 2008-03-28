@@ -7,6 +7,7 @@
 BEGIN_EVENT_TABLE(presenter_screen, wxFrame)
     EVT_MENU(wxID_ANY, presenter_screen::on_toolbar)
     EVT_PAINT(presenter_screen::on_paint)
+    EVT_SIZE(presenter_screen::on_resize)
 END_EVENT_TABLE()
 
 presenter_screen::presenter_screen() : wxFrame(NULL, -1, wxT(APPNAME), wxDefaultPosition, wxSize(500, 400))
@@ -37,20 +38,41 @@ presenter_screen::presenter_screen() : wxFrame(NULL, -1, wxT(APPNAME), wxDefault
     presentation_ = 0;
 }
 
+void presenter_screen::on_resize(wxSizeEvent &e)
+{
+    refresh();
+}
+
 void presenter_screen::on_paint(wxPaintEvent &e)
 {
     wxPaintDC dc(this);
     PrepareDC(dc);
 
-    int iw, ih; 
+    int iw, ih, sw, sh;
+    
+    // paint background black
+    GetSize(&iw, &ih);
+    dc.SetBrush(wxBrush(*wxBLACK, wxSOLID));
+    dc.DrawRectangle(0, 0, iw, ih);
+
+    // figure out coordinates to center both slides on the screen
     toolbar_->GetSize(&iw, &ih);
+    GetClientSize(&sw, &sh);
+
+    sh = ih + (sh - std::max(current_slide_.GetHeight(), next_slide_.GetHeight()))/2;
+    
+    if (sh < ih) 
+        sh = ih;
+
+    sw -= std::max(current_slide_.GetWidth(), next_slide_.GetWidth())*2;
+    sw/=2;
 
     // make this configurable!!!
     if (current_slide_.Ok())
-        dc.DrawBitmap(current_slide_, 0, ih, true);
+        dc.DrawBitmap(current_slide_, sw, sh, true);
 
     if (next_slide_.Ok())
-        dc.DrawBitmap(next_slide_, current_slide_.GetWidth() + 10, ih, true);
+        dc.DrawBitmap(next_slide_, sw+current_slide_.GetWidth(), sh, true);
 }
 
 void presenter_screen::on_toolbar(wxCommandEvent &e)
@@ -82,7 +104,7 @@ void presenter_screen::on_toolbar(wxCommandEvent &e)
     {
         presentation_ = new slide_screen(this, pdf_);
 
-        presentation_->change_slide(slide_nr_);
+        presentation_->load_slide(slide_nr_);
         presentation_->Show(true);
 
         toolbar_->EnableTool(wxID_STOP, true);
@@ -129,15 +151,15 @@ void presenter_screen::load_slide(size_t slide_nr)
     {
         // this kind of sucks...
         int iw, ih; 
-        GetSize(&iw,&ih);
+        GetClientSize(&iw,&ih);
         size_t w=iw, h=ih;
-        toolbar_->GetSize(&iw, &ih);
-        h-=ih;
 
-        render_pdf_to(&pdf_, current_slide_, slide_nr, w/2, h/2);
+        w/=2;
 
-        if (slide_nr != pdf_.page_count())
-            render_pdf_to(&pdf_, next_slide_, slide_nr+1, w/2, h/2);
+        render_pdf_to(&pdf_, current_slide_, slide_nr, w, h);
+
+        if (pdf_.page_count() != 0 && slide_nr != pdf_.page_count())
+            render_pdf_to(&pdf_, next_slide_, slide_nr+1, w, h);
         else
             next_slide_ = wxBitmap();
 
@@ -146,11 +168,16 @@ void presenter_screen::load_slide(size_t slide_nr)
 
         // if presentation window is open (i.e. slide screen)
         if (presentation_)
-            presentation_->change_slide(slide_nr);
+            presentation_->load_slide(slide_nr);
 
     }
     catch(std::exception &ex)
     {
         wxMessageBox(wxString(ex.what(), wxConvUTF8), wxT(APPNAME), wxICON_ERROR, this);
     }
+}
+
+void presenter_screen::refresh()
+{
+    load_slide(slide_nr_);
 }

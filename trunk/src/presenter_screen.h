@@ -25,9 +25,11 @@ protected:
 
     size_t slide_nr_;
     void load_slide(size_t slide_nr);
+    void refresh();
 
     void on_toolbar(wxCommandEvent &e);
     void on_paint(wxPaintEvent &e);
+    void on_resize(wxSizeEvent &e);
 
     wxBitmap current_slide_, next_slide_;
 public:
