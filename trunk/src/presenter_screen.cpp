@@ -2,6 +2,7 @@
 #include "presenter_screen.h"
 #include <stdexcept>
 #include <wx/aboutdlg.h>
+#include <boost/lexical_cast.hpp>
 #include "tools.h"
 
 BEGIN_EVENT_TABLE(presenter_screen, wxFrame)
@@ -21,14 +22,11 @@ presenter_screen::presenter_screen() : wxFrame(NULL, -1, wxT(APPNAME), wxDefault
     // disable both, since no pdf is loaded at startup
     toolbar_->AddTool   (wxID_OK,   wxT("Run"),                 wxBITMAP(RUN)); 
     toolbar_->AddTool   (wxID_STOP, wxT("Stop"),                wxBITMAP(STOP));
-    toolbar_->EnableTool(wxID_OK, false);
-    toolbar_->EnableTool(wxID_STOP, false);
-
+    
     toolbar_->AddSeparator();
+    
     toolbar_->AddTool   (wxID_BACKWARD, wxT("Previous slide"),  wxBITMAP(PREV));
     toolbar_->AddTool   (wxID_FORWARD,  wxT("Next slide"),      wxBITMAP(NEXT));
-    toolbar_->EnableTool(wxID_BACKWARD, false);
-    toolbar_->EnableTool(wxID_FORWARD, false);
 
     toolbar_->AddSeparator();
     toolbar_->AddTool   (wxID_ABOUT,    wxT("About"),           wxBITMAP(help));
@@ -36,6 +34,16 @@ presenter_screen::presenter_screen() : wxFrame(NULL, -1, wxT(APPNAME), wxDefault
     toolbar_->Realize();
 
     presentation_ = 0;
+
+    reset_controls();
+}
+
+void presenter_screen::reset_controls(bool active)
+{
+    toolbar_->EnableTool(wxID_OK, active);
+    toolbar_->EnableTool(wxID_STOP, false);
+    toolbar_->EnableTool(wxID_BACKWARD, false);
+    toolbar_->EnableTool(wxID_FORWARD, active);
 }
 
 void presenter_screen::on_resize(wxSizeEvent &e)
@@ -92,7 +100,8 @@ void presenter_screen::on_toolbar(wxCommandEvent &e)
 
                 // updates done, load first slide
                 slide_nr_ = 1;
-                load_slide(slide_nr_);
+                reset_controls(true);
+                refresh();
             }
             catch(std::exception &ex)
             {
@@ -104,7 +113,7 @@ void presenter_screen::on_toolbar(wxCommandEvent &e)
     {
         presentation_ = new slide_screen(this, pdf_);
 
-        presentation_->load_slide(slide_nr_);
+        refresh_slide_screen();
         presentation_->Show(true);
 
         toolbar_->EnableTool(wxID_STOP, true);
@@ -135,13 +144,15 @@ void presenter_screen::on_toolbar(wxCommandEvent &e)
     {
         toolbar_->EnableTool(wxID_BACKWARD, true);
         toolbar_->EnableTool(wxID_FORWARD, !(slide_nr_ == pdf_.page_count() - 1));
-        load_slide(++slide_nr_);
+        ++slide_nr_;
+        refresh();
     }
     else if (e.GetId() == wxID_BACKWARD)
     {
         toolbar_->EnableTool(wxID_FORWARD, true);
         toolbar_->EnableTool(wxID_BACKWARD, !(slide_nr_ == 2));
-        load_slide(--slide_nr_);
+        --slide_nr_;
+        refresh();
     }
 }
 
@@ -165,11 +176,6 @@ void presenter_screen::load_slide(size_t slide_nr)
 
         // force repaint
         Refresh();
-
-        // if presentation window is open (i.e. slide screen)
-        if (presentation_)
-            presentation_->load_slide(slide_nr);
-
     }
     catch(std::exception &ex)
     {
@@ -180,4 +186,33 @@ void presenter_screen::load_slide(size_t slide_nr)
 void presenter_screen::refresh()
 {
     load_slide(slide_nr_);
+
+    std::stringstream title;
+
+    title << APPNAME;
+    title << " ";
+    title << VERSION;
+
+    if (pdf_.good())
+    {
+        title << " - Slide ";
+        title << boost::lexical_cast<std::string>(static_cast<unsigned int>(slide_nr_));
+        title << "/";
+        title << boost::lexical_cast<std::string>(static_cast<unsigned int>(pdf_.page_count()));
+    }
+    
+    wxString wx_title(title.str().c_str(), wxConvUTF8);
+
+    SetTitle(wx_title);
+    refresh_slide_screen();
+}
+
+void presenter_screen::refresh_slide_screen()
+{
+    // if presentation window is open (i.e. slide screen)
+    if (presentation_)
+    {
+        presentation_->load_slide(slide_nr_);
+        presentation_->SetTitle(GetTitle());
+    }
 }

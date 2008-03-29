@@ -23,7 +23,7 @@ void slide_screen::on_resize(wxSizeEvent &e)
 void slide_screen::on_key(wxKeyEvent &e)
 {
     // if the usual "fullscreen" keycombo was pressed
-    else if (((e.AltDown() || e.CmdDown()) && e.GetKeyCode() == WXK_RETURN) ||
+    if (((e.AltDown() || e.CmdDown()) && e.GetKeyCode() == WXK_RETURN) ||
         (e.CmdDown() && e.GetKeyCode() == 'F'))
     {
         ShowFullScreen(!IsFullScreen());

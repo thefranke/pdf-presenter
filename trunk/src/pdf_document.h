@@ -10,7 +10,9 @@
 #include <SplashOutputDev.h>
 #include <PDFDoc.h>
 
-//typedef boost::shared_array<unsigned char> raw_image;
+/*!
+ * \brief Standard pointer type for raw bitmaps.
+ */
 typedef unsigned char* raw_image;
 
 /*!
@@ -23,14 +25,33 @@ typedef unsigned char* raw_image;
 class pdf_document
 {
 public:
+    /*!
+     * \brief Load a PDF document.
+     */
     virtual void load(const char* filename) = 0;
+
+    /*!
+     * \brief Render a PDF page to a raw bitmap.
+     *
+     * Renders an image of a PDF page and returns width and height.
+     *
+     * \param page_nr The page number to be rendered.
+     * \param width A variable containing the maximal width the result might have. The actual
+     *              width of the final image is written back to this variable.
+     * \param height A variable containing the maximal height the result might have. The actual
+     *               height of the final image is written back to this variable.
+     */
     virtual raw_image render(size_t page_nr, size_t& width, size_t& height) = 0;
+
+    /*!
+     * \brief Return the number of pages of the PDF document.
+     */
     virtual size_t page_count() const = 0;
-    virtual float page_size_ratio(size_t page_nr) const = 0;
-    virtual void cleanup() = 0;
 
     virtual double get_width_inch(size_t page_nr) const = 0;
     virtual double get_height_inch(size_t page_nr) const = 0;
+
+    virtual bool good() const = 0;
 };
 
 /*!
@@ -57,6 +78,11 @@ public:
     double get_height_inch(size_t page_nr) const
     {
         return doc_->getPageMediaHeight(static_cast<int>(page_nr));
+    }
+
+    bool good() const
+    {
+        return (doc_ && output_dev_);
     }
 
     poppler_document() {}    

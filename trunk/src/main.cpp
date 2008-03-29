@@ -1,11 +1,8 @@
 // pdf-presenter (c) 2008 Tobias Alexander Franke. Please see license.txt.
 
 #include <wx/wx.h>
-#include "presenter_screen.h"
-
-#include <boost/lexical_cast.hpp>
-
 #include <SecurityHandler.h>
+#include "presenter_screen.h"
 
 void *StandardSecurityHandler::getAuthData()
 {
