@@ -51,7 +51,7 @@ float poppler_document::page_size_ratio(size_t page_nr) const
 
 raw_image poppler_document::render(size_t page_nr, size_t& width, size_t& height)
 {
-    if (!output_dev_)
+    if (!good())
         return 0;
 
     const double dpi = get_pdf_doc_dpi(get_width_inch(page_nr), get_height_inch(page_nr), width, height);

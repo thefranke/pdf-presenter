@@ -14,7 +14,8 @@
  * To get this combo working in harmony on windows, link Poppler
  * against the modified JPEG lib from wxWidgets. After doing so
  * DCTStream.cc's str_fill_input_buffer function return type needs 
- * to be redefined to wxjpeg_boolean.
+ * to be redefined to wxjpeg_boolean, otherwise the boolean sizes
+ * do not match each other.
  */
 class presenter_screen : public wxFrame
 {
@@ -26,6 +27,8 @@ protected:
     size_t slide_nr_;
     void load_slide(size_t slide_nr);
     void refresh();
+    void refresh_slide_screen();
+    void reset_controls(bool active = false);
 
     void on_toolbar(wxCommandEvent &e);
     void on_paint(wxPaintEvent &e);
