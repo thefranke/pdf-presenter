@@ -5,6 +5,9 @@
 #include <boost/lexical_cast.hpp>
 #include "tools.h"
 
+// percentage of border in pixels relative to entire render area
+const float border_size = 0.025f;
+
 BEGIN_EVENT_TABLE(presenter_screen, wxFrame)
     EVT_MENU(wxID_ANY, presenter_screen::on_toolbar)
     EVT_PAINT(presenter_screen::on_paint)
@@ -67,20 +70,24 @@ void presenter_screen::on_paint(wxPaintEvent &e)
     toolbar_->GetSize(&iw, &ih);
     GetClientSize(&sw, &sh);
 
+    size_t border = static_cast<size_t>(sw*border_size);
+
+    // subtract border: left, middle and right (3 times the border size)
     sh = ih + (sh - std::max(current_slide_.GetHeight(), next_slide_.GetHeight()))/2;
     
     if (sh < ih) 
         sh = ih;
 
+    sw -= border*3.f; 
     sw -= std::max(current_slide_.GetWidth(), next_slide_.GetWidth())*2;
     sw/=2;
 
+
     // make this configurable!!!
     if (current_slide_.Ok())
-        dc.DrawBitmap(current_slide_, sw, sh, true);
-
+        dc.DrawBitmap(current_slide_, sw+border, sh, true);
     if (next_slide_.Ok())
-        dc.DrawBitmap(next_slide_, sw+current_slide_.GetWidth(), sh, true);
+        dc.DrawBitmap(next_slide_, sw+current_slide_.GetWidth()+border*2.f, sh, true);
 }
 
 void presenter_screen::on_toolbar(wxCommandEvent &e)
@@ -164,7 +171,10 @@ void presenter_screen::load_slide(size_t slide_nr)
         int iw, ih; 
         GetClientSize(&iw,&ih);
         size_t w=iw, h=ih;
+        size_t border = static_cast<size_t>(w*border_size);
 
+        // subtract border: left, center, right
+        w-=static_cast<size_t>(border*3.f);
         w/=2;
 
         render_pdf_to(&pdf_, current_slide_, slide_nr, w, h);
