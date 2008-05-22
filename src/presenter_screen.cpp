@@ -1,20 +1,17 @@
 // pdf-presenter (c) 2008 Tobias Alexander Franke. Please see license.txt.
 #include "presenter_screen.h"
+
 #include <stdexcept>
 #include <wx/aboutdlg.h>
 #include <boost/lexical_cast.hpp>
-#include "tools.h"
 
-// percentage of border in pixels relative to entire render area
-const float border_size = 0.025f;
+#include "tools.h"
 
 BEGIN_EVENT_TABLE(presenter_screen, wxFrame)
     EVT_MENU(wxID_ANY, presenter_screen::on_toolbar)
-    EVT_PAINT(presenter_screen::on_paint)
-    EVT_SIZE(presenter_screen::on_resize)
 END_EVENT_TABLE()
 
-presenter_screen::presenter_screen() : wxFrame(NULL, -1, wxT(APPNAME), wxDefaultPosition, wxSize(500, 400))
+presenter_screen::presenter_screen() : wxFrame(NULL, -1, wxT(APPNAME), wxDefaultPosition, wxSize(600, 400))
 {
     // setup toolbar
     toolbar_ = CreateToolBar(wxTB_FLAT | wxTB_DOCKABLE | wxTB_TEXT);
@@ -23,21 +20,42 @@ presenter_screen::presenter_screen() : wxFrame(NULL, -1, wxT(APPNAME), wxDefault
 
     // there seems to be no wxID_START, but wxID_STOP, WTF?!
     // disable both, since no pdf is loaded at startup
-    toolbar_->AddTool   (wxID_OK,   wxT("Run"),                 wxBITMAP(RUN)); 
-    toolbar_->AddTool   (wxID_STOP, wxT("Stop"),                wxBITMAP(STOP));
+    toolbar_->AddTool   (wxID_OK,           wxT("Run"),             wxBITMAP(RUN)); 
+    toolbar_->AddTool   (wxID_STOP,         wxT("Stop"),            wxBITMAP(STOP));
+    toolbar_->AddTool   (wxID_CONTEXT_HELP, wxT("Toggle notes"),    wxBITMAP(help));
     
     toolbar_->AddSeparator();
     
-    toolbar_->AddTool   (wxID_BACKWARD, wxT("Previous slide"),  wxBITMAP(PREV));
-    toolbar_->AddTool   (wxID_FORWARD,  wxT("Next slide"),      wxBITMAP(NEXT));
+    toolbar_->AddTool   (wxID_BACKWARD,     wxT("Previous slide"),  wxBITMAP(PREV));
+    toolbar_->AddTool   (wxID_FORWARD,      wxT("Next slide"),      wxBITMAP(NEXT));
 
     toolbar_->AddSeparator();
-    toolbar_->AddTool   (wxID_ABOUT,    wxT("About"),           wxBITMAP(help));
+    toolbar_->AddTool   (wxID_ABOUT,        wxT("About"),           wxBITMAP(help));
 
     toolbar_->Realize();
 
     presentation_ = 0;
 
+    wxSize tb_size = toolbar_->GetSize();
+
+    splitter_ = new wxSplitterWindow(this, wxID_ANY, wxPoint(0, 0));
+
+    // TODO: make this configurable
+    notes_space_    = new wxScrolledWindow(splitter_);
+    slides_space_   = new wxSplitterWindow(splitter_, wxID_ANY, wxPoint(0, 0));
+
+    slide_first_ = new pdf_frame(slides_space_, &pdf_);
+    slide_second_ = new pdf_frame(slides_space_, &pdf_);
+
+    slides_space_->SplitVertically(slide_first_, slide_second_, GetSize().GetWidth()/2);
+    slides_space_->SetSashGravity(0.5);
+
+    notes_ = new wxTextCtrl(notes_space_, wxID_ANY, _T("This is the log window.\n"), wxPoint(0,0));
+
+    slides_space_->SetBackgroundColour(wxColour(*wxBLACK));
+    notes_space_->SetBackgroundColour(wxColour(*wxWHITE));
+
+    toggle_notes();
     reset_controls();
 }
 
@@ -47,47 +65,6 @@ void presenter_screen::reset_controls(bool active)
     toolbar_->EnableTool(wxID_STOP, false);
     toolbar_->EnableTool(wxID_BACKWARD, false);
     toolbar_->EnableTool(wxID_FORWARD, active);
-}
-
-void presenter_screen::on_resize(wxSizeEvent &e)
-{
-    refresh();
-}
-
-void presenter_screen::on_paint(wxPaintEvent &e)
-{
-    wxPaintDC dc(this);
-    PrepareDC(dc);
-
-    int iw, ih, sw, sh;
-    
-    // paint background black
-    GetSize(&iw, &ih);
-    dc.SetBrush(wxBrush(*wxBLACK, wxSOLID));
-    dc.DrawRectangle(0, 0, iw, ih);
-
-    // figure out coordinates to center both slides on the screen
-    toolbar_->GetSize(&iw, &ih);
-    GetClientSize(&sw, &sh);
-
-    size_t border = static_cast<size_t>(sw*border_size);
-
-    // subtract border: left, middle and right (3 times the border size)
-    sh = ih + (sh - std::max(current_slide_.GetHeight(), next_slide_.GetHeight()))/2;
-    
-    if (sh < ih) 
-        sh = ih;
-
-    sw -= border*3.f; 
-    sw -= std::max(current_slide_.GetWidth(), next_slide_.GetWidth())*2;
-    sw/=2;
-
-
-    // make this configurable!!!
-    if (current_slide_.Ok())
-        dc.DrawBitmap(current_slide_, sw+border, sh, true);
-    if (next_slide_.Ok())
-        dc.DrawBitmap(next_slide_, sw+current_slide_.GetWidth()+border*2.f, sh, true);
 }
 
 void presenter_screen::on_toolbar(wxCommandEvent &e)
@@ -118,7 +95,7 @@ void presenter_screen::on_toolbar(wxCommandEvent &e)
     }
     else if (e.GetId() == wxID_OK)
     {
-        presentation_ = new slide_screen(this, pdf_);
+        presentation_ = new slide_screen(this, &pdf_);
 
         refresh_slide_screen();
         presentation_->Show(true);
@@ -161,36 +138,36 @@ void presenter_screen::on_toolbar(wxCommandEvent &e)
         --slide_nr_;
         refresh();
     }
+    else if (e.GetId() == wxID_CONTEXT_HELP)
+    {
+        toggle_notes();
+    }
+}
+
+void presenter_screen::toggle_notes()
+{
+    if (splitter_->IsSplit())
+    {
+        splitter_->Unsplit();
+        notes_space_->Show(false);
+    }
+    else
+    {
+        splitter_->SplitHorizontally(slides_space_, notes_space_, -100);
+        splitter_->SetSashGravity(0.8);
+
+        notes_space_->Show();
+        slides_space_->Show();
+    }
 }
 
 void presenter_screen::load_slide(size_t slide_nr)
 {
-    try 
-    {
-        // this kind of sucks...
-        int iw, ih; 
-        GetClientSize(&iw,&ih);
-        size_t w=iw, h=ih;
-        size_t border = static_cast<size_t>(w*border_size);
+    slide_first_->load_slide(slide_nr);
+    slide_second_->load_slide(slide_nr + 1);
 
-        // subtract border: left, center, right
-        w-=static_cast<size_t>(border*3.f);
-        w/=2;
-
-        render_pdf_to(&pdf_, current_slide_, slide_nr, w, h);
-
-        if (pdf_.page_count() != 0 && slide_nr != pdf_.page_count())
-            render_pdf_to(&pdf_, next_slide_, slide_nr+1, w, h);
-        else
-            next_slide_ = wxBitmap();
-
-        // force repaint
-        Refresh();
-    }
-    catch(std::exception &ex)
-    {
-        wxMessageBox(wxString(ex.what(), wxConvUTF8), wxT(APPNAME), wxICON_ERROR, this);
-    }
+    // force repaint
+    Refresh();
 }
 
 void presenter_screen::refresh()
@@ -199,9 +176,9 @@ void presenter_screen::refresh()
 
     std::stringstream title;
 
-    title << APPNAME;
-    title << " ";
-    title << VERSION;
+    title << APPNAME
+          << " "
+          << VERSION;
 
     if (pdf_.good())
     {

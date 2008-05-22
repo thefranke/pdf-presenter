@@ -2,6 +2,7 @@
 #pragma once
 #include <wx/wx.h>
 #include "pdf_document.h"
+#include "pdf_frame.h"
 
 /*!
  * \brief A minimal window that renders a single PDF page as big as possible.
@@ -12,17 +13,12 @@ protected:
     void on_key(wxKeyEvent &e);
     void on_close(wxCloseEvent &e);
     void on_click(wxMouseEvent &e);
-    void on_paint(wxPaintEvent &e);
-    void on_resize(wxSizeEvent &e);
 
-    poppler_document pdf_;
-    wxBitmap current_slide_;
-    size_t slide_nr_;
+    pdf_frame* pdf_;
 
 public:
-    slide_screen(wxFrame *parent, poppler_document& pdf);
+    slide_screen(wxFrame* parent, pdf_document* pdf);
     void load_slide(size_t slide_nr);
-    void refresh();
 
     DECLARE_EVENT_TABLE()
 };
