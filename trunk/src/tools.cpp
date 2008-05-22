@@ -48,7 +48,7 @@ double get_pdf_doc_dpi(double media_width, double media_height, size_t pixels_wi
 
 void render_pdf_to(pdf_document* pdf, wxBitmap& target, size_t slide_nr, size_t w, size_t h)
 {
-    if (pdf->good())
+    if (pdf->good() && slide_nr <= pdf->page_count())
     {
         raw_image raw = pdf->render(slide_nr, w, h);
         target = wxBitmap(wxImage(static_cast<int>(w), static_cast<int>(h), raw));

@@ -51,6 +51,9 @@ public:
     virtual double get_width_inch(size_t page_nr) const = 0;
     virtual double get_height_inch(size_t page_nr) const = 0;
 
+    /*!
+     * \brief Returns true if pdf document has been read correctly.
+     */
     virtual bool good() const = 0;
 };
 
