@@ -9,7 +9,10 @@ END_EVENT_TABLE()
 
 pdf_frame::pdf_frame(wxWindow *parent, pdf_document* pdf) : 
 wxScrolledWindow(parent), pdf_(pdf)
-{}
+{
+    if (parent)
+        SetNextHandler(GetParent()->GetEventHandler());
+}
 
 void pdf_frame::on_resize(wxSizeEvent &e)
 {
