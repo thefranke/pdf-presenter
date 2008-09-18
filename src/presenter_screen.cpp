@@ -38,16 +38,17 @@ presenter_screen::presenter_screen() : wxFrame(NULL, -1, wxT(APPNAME), wxDefault
 
     wxSize tb_size = toolbar_->GetSize();
 
-    splitter_ = new wxSplitterWindow(this, wxID_ANY, wxPoint(0, 0));
+    splitter_ = new wxSplitterWindow(this, wxID_ANY, wxPoint(0, 0), GetClientSize());
 
     // TODO: make this configurable
     notes_space_    = new wxScrolledWindow(splitter_);
-    slides_space_   = new wxSplitterWindow(splitter_, wxID_ANY, wxPoint(0, 0));
+    slides_space_   = new wxSplitterWindow(splitter_, wxID_ANY, wxPoint(0, 0), GetClientSize());
 
     slide_first_ = new pdf_frame(slides_space_, &pdf_);
     slide_second_ = new pdf_frame(slides_space_, &pdf_);
 
-    slides_space_->SplitVertically(slide_first_, slide_second_, GetSize().GetWidth()/2);
+    // HACK: subtract x to set ruler to true center
+    slides_space_->SplitVertically(slide_first_, slide_second_, GetSize().GetWidth()/2 - 10);
     slides_space_->SetSashGravity(0.5);
 
     notes_ = new wxTextCtrl(notes_space_, wxID_ANY, _T("This is the log window.\n"), wxPoint(0,0));
@@ -55,7 +56,12 @@ presenter_screen::presenter_screen() : wxFrame(NULL, -1, wxT(APPNAME), wxDefault
     slides_space_->SetBackgroundColour(wxColour(*wxBLACK));
     notes_space_->SetBackgroundColour(wxColour(*wxWHITE));
 
-    toggle_notes();
+    splitter_->SplitHorizontally(slides_space_, notes_space_, -100);
+    splitter_->SetSashGravity(0.8);
+    splitter_->Unsplit();
+
+    slides_space_->Show();
+    notes_space_->Hide();
     reset_controls();
 }
 
@@ -149,7 +155,7 @@ void presenter_screen::toggle_notes()
     if (splitter_->IsSplit())
     {
         splitter_->Unsplit();
-        notes_space_->Show(false);
+        notes_space_->Hide();
     }
     else
     {
@@ -158,6 +164,8 @@ void presenter_screen::toggle_notes()
 
         notes_space_->Show();
         slides_space_->Show();
+
+        notes_->SetSize(notes_space_->GetClientSize());
     }
 }
 

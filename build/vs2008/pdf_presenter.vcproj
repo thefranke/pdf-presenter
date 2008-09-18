@@ -194,6 +194,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\pdf_frame.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\pdf_notes.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\presenter_screen.cpp"
 				>
 			</File>
@@ -213,6 +221,14 @@
 			>
 			<File
 				RelativePath="..\..\src\pdf_document.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\pdf_frame.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\pdf_notes.h"
 				>
 			</File>
 			<File
