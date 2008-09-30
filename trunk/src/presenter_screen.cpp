@@ -15,22 +15,21 @@ presenter_screen::presenter_screen() : wxFrame(NULL, -1, wxT(APPNAME), wxDefault
 {
     // setup toolbar
     toolbar_ = CreateToolBar(wxTB_FLAT | wxTB_DOCKABLE | wxTB_TEXT);
-    toolbar_->AddTool   (wxID_OPEN, wxT("Open PDF"),            wxBITMAP(open));
-    toolbar_->AddSeparator();
+    toolbar_->AddTool       (wxID_OPEN,         wxT("Open PDF"),            wxBITMAP(open));
+    toolbar_->AddSeparator  ();
 
     // there seems to be no wxID_START, but wxID_STOP, WTF?!
     // disable both, since no pdf is loaded at startup
-    toolbar_->AddTool   (wxID_OK,           wxT("Run"),             wxBITMAP(RUN)); 
-    toolbar_->AddTool   (wxID_STOP,         wxT("Stop"),            wxBITMAP(STOP));
-    toolbar_->AddTool   (wxID_CONTEXT_HELP, wxT("Toggle notes"),    wxBITMAP(help));
+    toolbar_->AddCheckTool  (wxID_OK,           wxT("Toggle presentation"), wxBITMAP(RUN), wxBITMAP(RUN));
+    toolbar_->AddCheckTool  (wxID_CONTEXT_HELP, wxT("Toggle notes"),        wxBITMAP(help), wxBITMAP(help));
     
-    toolbar_->AddSeparator();
+    toolbar_->AddSeparator  ();
     
-    toolbar_->AddTool   (wxID_BACKWARD,     wxT("Previous slide"),  wxBITMAP(PREV));
-    toolbar_->AddTool   (wxID_FORWARD,      wxT("Next slide"),      wxBITMAP(NEXT));
+    toolbar_->AddTool       (wxID_BACKWARD,     wxT("Previous slide"),      wxBITMAP(PREV));
+    toolbar_->AddTool       (wxID_FORWARD,      wxT("Next slide"),          wxBITMAP(NEXT));
 
-    toolbar_->AddSeparator();
-    toolbar_->AddTool   (wxID_ABOUT,        wxT("About"),           wxBITMAP(help));
+    toolbar_->AddSeparator  ();
+    toolbar_->AddTool       (wxID_ABOUT,        wxT("About"),               wxBITMAP(help));
 
     toolbar_->Realize();
 
@@ -68,7 +67,6 @@ presenter_screen::presenter_screen() : wxFrame(NULL, -1, wxT(APPNAME), wxDefault
 void presenter_screen::reset_controls(bool active)
 {
     toolbar_->EnableTool(wxID_OK, active);
-    toolbar_->EnableTool(wxID_STOP, false);
     toolbar_->EnableTool(wxID_BACKWARD, false);
     toolbar_->EnableTool(wxID_FORWARD, active);
 }
@@ -101,25 +99,7 @@ void presenter_screen::on_toolbar(wxCommandEvent &e)
     }
     else if (e.GetId() == wxID_OK)
     {
-        if (!presentation_)
-        {
-            presentation_ = new slide_screen(this, &pdf_);
-            toolbar_->EnableTool(wxID_STOP, true);
-            toolbar_->EnableTool(wxID_OK, false);
-        }
-
-        refresh_slide_screen();
-        presentation_->Show(true);
-    }
-    else if (e.GetId() == wxID_STOP)
-    {
-        toolbar_->EnableTool(wxID_STOP, false);
-        toolbar_->EnableTool(wxID_OK, true);
-
-        if(!presentation_->IsBeingDeleted())
-            presentation_->Destroy();
-
-        presentation_ = 0;
+        toggle_presentation();
     }
     else if (e.GetId() == wxID_ABOUT)
     {
@@ -149,6 +129,24 @@ void presenter_screen::on_toolbar(wxCommandEvent &e)
     else if (e.GetId() == wxID_CONTEXT_HELP)
     {
         toggle_notes();
+    }
+}
+
+void presenter_screen::toggle_presentation()
+{
+    if (!presentation_)
+    {
+        presentation_ = new slide_screen(this, &pdf_);
+        refresh_slide_screen();
+        presentation_->Show(true);
+        toolbar_->SetToolShortHelp(wxID_OK, wxT("lalalala"));
+    }
+    else
+    {
+        if(!presentation_->IsBeingDeleted())
+            presentation_->Destroy();
+
+        presentation_ = 0;
     }
 }
 

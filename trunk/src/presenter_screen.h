@@ -39,6 +39,7 @@ protected:
     void refresh_slide_screen();
     void reset_controls(bool active = false);
     void toggle_notes();
+    void toggle_presentation();
 
     void on_toolbar(wxCommandEvent &e);
     void on_paint(wxPaintEvent &e);
