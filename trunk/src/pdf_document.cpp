@@ -27,12 +27,12 @@ void poppler_document::load(const char* filename)
         bg_color[2] = 0;
 
         output_dev_ = boost::shared_ptr<SplashOutputDev>(new SplashOutputDev(splashModeRGB8, 3, gFalse, bg_color));
-
-        if (output_dev_)
-            output_dev_->startDoc(doc_->getXRef());
-        else
-            throw std::runtime_error("Output dev not initialized");
     }
+
+    if (output_dev_)
+        output_dev_->startDoc(doc_->getXRef());
+    else
+        throw std::runtime_error("Output dev not initialized");
 }
 
 size_t poppler_document::page_count() const
@@ -54,7 +54,7 @@ raw_image poppler_document::render(size_t page_nr, size_t& width, size_t& height
     if (!good())
         return 0;
 
-    const double dpi = get_pdf_doc_dpi(get_width_inch(page_nr), get_height_inch(page_nr), width, height);
+    const double dpi = get_pdf_doc_dpi(width_inch(page_nr), height_inch(page_nr), width, height);
 
     doc_->displayPage(output_dev_.get(), static_cast<int>(page_nr), dpi, dpi, 0, gFalse, gFalse, gFalse);
     SplashBitmap *bmp = output_dev_->getBitmap();

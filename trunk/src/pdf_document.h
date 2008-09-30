@@ -3,6 +3,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/shared_array.hpp>
+#include <boost/noncopyable.hpp>
 
 #include <GlobalParams.h>
 #include <SplashBitmap.h>
@@ -48,8 +49,8 @@ public:
      */
     virtual size_t page_count() const = 0;
 
-    virtual double get_width_inch(size_t page_nr) const = 0;
-    virtual double get_height_inch(size_t page_nr) const = 0;
+    virtual double width_inch(size_t page_nr) const = 0;
+    virtual double height_inch(size_t page_nr) const = 0;
 
     /*!
      * \brief Returns true if pdf document has been read correctly.
@@ -60,7 +61,7 @@ public:
 /*!
  * \brief A pdf_document implementation with the poppler library.
  */
-class poppler_document : public pdf_document
+class poppler_document : public pdf_document, private boost::noncopyable
 {
 protected:
     boost::shared_ptr<PDFDoc> doc_;
@@ -73,12 +74,12 @@ public:
     float page_size_ratio(size_t page_nr) const;
     void cleanup();
 
-    double get_width_inch(size_t page_nr) const
+    double width_inch(size_t page_nr) const
     {
         return doc_->getPageMediaWidth(static_cast<int>(page_nr));
     }
 
-    double get_height_inch(size_t page_nr) const
+    double height_inch(size_t page_nr) const
     {
         return doc_->getPageMediaHeight(static_cast<int>(page_nr));
     }
