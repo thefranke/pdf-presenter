@@ -101,13 +101,15 @@ void presenter_screen::on_toolbar(wxCommandEvent &e)
     }
     else if (e.GetId() == wxID_OK)
     {
-        presentation_ = new slide_screen(this, &pdf_);
+        if (!presentation_)
+        {
+            presentation_ = new slide_screen(this, &pdf_);
+            toolbar_->EnableTool(wxID_STOP, true);
+            toolbar_->EnableTool(wxID_OK, false);
+        }
 
         refresh_slide_screen();
         presentation_->Show(true);
-
-        toolbar_->EnableTool(wxID_STOP, true);
-        toolbar_->EnableTool(wxID_OK, false);
     }
     else if (e.GetId() == wxID_STOP)
     {

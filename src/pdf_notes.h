@@ -13,5 +13,5 @@ public:
     pdf_notes();
     void read(const char* file, bool can_be_empty = true);
     bool good() const;
-    std::string get_note(size_t page_nr) const;
+    std::string note(size_t page_nr) const;
 };

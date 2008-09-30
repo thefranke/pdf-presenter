@@ -7,7 +7,7 @@ pdf_notes::pdf_notes() : can_be_empty_(false)
 {
 }
 
-std::string pdf_notes::get_note(size_t page_nr) const
+std::string pdf_notes::note(size_t page_nr) const
 {
     note_map::const_iterator n = notes_.find(page_nr);
 
