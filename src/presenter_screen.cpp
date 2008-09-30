@@ -11,7 +11,7 @@ BEGIN_EVENT_TABLE(presenter_screen, wxFrame)
     EVT_MENU(wxID_ANY, presenter_screen::on_toolbar)
 END_EVENT_TABLE()
 
-presenter_screen::presenter_screen() : wxFrame(NULL, -1, wxT(APPNAME), wxDefaultPosition, wxSize(600, 400))
+presenter_screen::presenter_screen() : wxFrame(NULL, -1, wxT(APPNAME), wxDefaultPosition, wxSize(700, 328))
 {
     // setup toolbar
     toolbar_ = CreateToolBar(wxTB_FLAT | wxTB_DOCKABLE | wxTB_TEXT);
@@ -67,6 +67,7 @@ presenter_screen::presenter_screen() : wxFrame(NULL, -1, wxT(APPNAME), wxDefault
 void presenter_screen::reset_controls(bool active)
 {
     toolbar_->EnableTool(wxID_OK, active);
+    toolbar_->EnableTool(wxID_CONTEXT_HELP, false);
     toolbar_->EnableTool(wxID_BACKWARD, false);
     toolbar_->EnableTool(wxID_FORWARD, active);
 }
