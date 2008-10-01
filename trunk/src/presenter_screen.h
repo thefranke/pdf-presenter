@@ -36,6 +36,7 @@ protected:
 
     void load_slide(size_t slide_nr);
     void refresh();
+    void refresh_title();
     void refresh_slide_screen();
     void reset_controls(bool active = false);
     void toggle_notes();

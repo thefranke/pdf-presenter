@@ -13,23 +13,25 @@ END_EVENT_TABLE()
 
 presenter_screen::presenter_screen() : wxFrame(NULL, -1, wxT(APPNAME), wxDefaultPosition, wxSize(700, 328))
 {
+    SetMinSize(wxSize(700, 328));
+
     // setup toolbar
     toolbar_ = CreateToolBar(wxTB_FLAT | wxTB_DOCKABLE | wxTB_TEXT);
-    toolbar_->AddTool       (wxID_OPEN,         wxT("Open PDF"),            wxBITMAP(open));
+    toolbar_->AddTool       (wxID_OPEN,         wxT("Open PDF"),            wxBITMAP(OPEN));
     toolbar_->AddSeparator  ();
 
     // there seems to be no wxID_START, but wxID_STOP, WTF?!
     // disable both, since no pdf is loaded at startup
-    toolbar_->AddCheckTool  (wxID_OK,           wxT("Toggle presentation"), wxBITMAP(RUN), wxBITMAP(RUN));
-    toolbar_->AddCheckTool  (wxID_CONTEXT_HELP, wxT("Toggle notes"),        wxBITMAP(help), wxBITMAP(help));
+    toolbar_->AddCheckTool  (wxID_OK,           wxT("Toggle presentation"), wxBITMAP(RUN),  wxBITMAP(RUN_INACT));
+    toolbar_->AddCheckTool  (wxID_CONTEXT_HELP, wxT("Toggle notes"),        wxBITMAP(INFO), wxBITMAP(INFO_INACT));
     
     toolbar_->AddSeparator  ();
     
-    toolbar_->AddTool       (wxID_BACKWARD,     wxT("Previous slide"),      wxBITMAP(PREV));
-    toolbar_->AddTool       (wxID_FORWARD,      wxT("Next slide"),          wxBITMAP(NEXT));
+    toolbar_->AddTool       (wxID_BACKWARD,     wxT("Previous slide"),      wxBITMAP(PREV), wxBITMAP(PREV_INACT));
+    toolbar_->AddTool       (wxID_FORWARD,      wxT("Next slide"),          wxBITMAP(NEXT), wxBITMAP(NEXT_INACT));
 
     toolbar_->AddSeparator  ();
-    toolbar_->AddTool       (wxID_ABOUT,        wxT("About"),               wxBITMAP(help));
+    toolbar_->AddTool       (wxID_ABOUT,        wxT("About"),               wxBITMAP(HELP));
 
     toolbar_->Realize();
 
@@ -62,6 +64,7 @@ presenter_screen::presenter_screen() : wxFrame(NULL, -1, wxT(APPNAME), wxDefault
     slides_space_->Show();
     notes_space_->Hide();
     reset_controls();
+    refresh_title();
 }
 
 void presenter_screen::reset_controls(bool active)
@@ -140,7 +143,6 @@ void presenter_screen::toggle_presentation()
         presentation_ = new slide_screen(this, &pdf_);
         refresh_slide_screen();
         presentation_->Show(true);
-        toolbar_->SetToolShortHelp(wxID_OK, wxT("lalalala"));
     }
     else
     {
@@ -179,10 +181,8 @@ void presenter_screen::load_slide(size_t slide_nr)
     Refresh();
 }
 
-void presenter_screen::refresh()
+void presenter_screen::refresh_title()
 {
-    load_slide(slide_nr_);
-
     std::stringstream title;
 
     title << APPNAME
@@ -200,6 +200,12 @@ void presenter_screen::refresh()
     wxString wx_title(title.str().c_str(), wxConvUTF8);
 
     SetTitle(wx_title);
+}
+
+void presenter_screen::refresh()
+{
+    load_slide(slide_nr_);
+    refresh_title();
     refresh_slide_screen();
 }
 
