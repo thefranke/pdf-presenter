@@ -2,7 +2,7 @@
 #include "pdf_frame.h"
 #include "tools.h"
 
-BEGIN_EVENT_TABLE(pdf_frame, wxScrolledWindow)
+BEGIN_EVENT_TABLE(pdf_frame, wxWindow)
     EVT_SIZE(pdf_frame::on_resize)
     EVT_PAINT(pdf_frame::on_paint)
 END_EVENT_TABLE()
@@ -11,7 +11,7 @@ pdf_frame::pdf_frame(wxWindow *parent, pdf_document* pdf) :
 wxScrolledWindow(parent), pdf_(pdf)
 {
     if (parent)
-        SetNextHandler(GetParent()->GetEventHandler());
+        SetNextHandler(parent->GetEventHandler());
 }
 
 void pdf_frame::on_resize(wxSizeEvent &e)

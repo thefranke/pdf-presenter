@@ -22,6 +22,11 @@ bool pdf_notes::good() const
     return notes_.size() > 0 || can_be_empty_;
 }
 
+bool pdf_notes::empty() const
+{
+    return notes_.size() == 0;
+}
+
 void pdf_notes::read(const char* file, bool can_be_empty)
 {
     can_be_empty_ = can_be_empty;
@@ -29,17 +34,23 @@ void pdf_notes::read(const char* file, bool can_be_empty)
 
     std::ifstream stream(file);
 
-    if (!stream.good() && !can_be_empty_)
-        throw std::runtime_error("Couldn't open notes.");
-
-    while(!stream.eof())
+    if (!stream.good())
     {
-        size_t page;
-        std::string note;
-
-        stream >> page;
-        stream >> note;
-
-        notes_.insert(std::make_pair(page, note));
+        if (!can_be_empty_)
+            throw std::runtime_error("Couldn't open notes.");
     }
+    else
+        while(!stream.eof())
+        {
+            size_t page;
+            std::string note;
+
+            stream >> page;
+
+            // HACK: go to next line
+            std::getline(stream, note);
+            std::getline(stream, note);
+
+            notes_.insert(std::make_pair(page, note));
+        }
 }

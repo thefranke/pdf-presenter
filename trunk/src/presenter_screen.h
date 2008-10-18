@@ -2,10 +2,13 @@
 #pragma once
 #include <wx/wx.h>
 #include <wx/splitter.h>
+#include <jpeglib.h>
+
 #include "slide_screen.h"
 #include "pdf_presenter.h"
 #include "pdf_document.h"
-#include <jpeglib.h>
+#include "pdf_notes.h"
+
 
 /*!
  * \brief The presenter screen.
@@ -31,20 +34,25 @@ protected:
     pdf_frame *slide_first_;
     pdf_frame *slide_second_;
     poppler_document pdf_;
+    pdf_notes notes_data_;
 
     size_t slide_nr_;
 
     void load_slide(size_t slide_nr);
+    void load_note(size_t slide_nr);
     void refresh();
     void refresh_title();
     void refresh_slide_screen();
     void reset_controls(bool active = false);
     void toggle_notes();
     void toggle_presentation();
+    void prev_slide();
+    void next_slide();
 
     void on_toolbar(wxCommandEvent &e);
     void on_paint(wxPaintEvent &e);
     void on_resize(wxSizeEvent &e);
+    void on_key(wxKeyEvent &e);
 public:
     presenter_screen();
 
