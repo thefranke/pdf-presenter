@@ -11,7 +11,9 @@ END_EVENT_TABLE()
 
 slide_screen::slide_screen(wxFrame* parent, pdf_document* pdf) : 
 wxFrame(parent, -1, wxT(APPNAME), wxDefaultPosition, wxSize(400,325)), pdf_(new pdf_frame(this, pdf))
-{}
+{
+    SetBackgroundColour(wxColour(0,0,0));
+}
 
 void slide_screen::on_key(wxKeyEvent &e)
 {

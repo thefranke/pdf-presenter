@@ -9,6 +9,7 @@
 
 BEGIN_EVENT_TABLE(presenter_screen, wxFrame)
     EVT_MENU(wxID_ANY, presenter_screen::on_toolbar)
+    EVT_KEY_DOWN(presenter_screen::on_key)
 END_EVENT_TABLE()
 
 presenter_screen::presenter_screen() : wxFrame(NULL, -1, wxT(APPNAME), wxDefaultPosition, wxSize(700, 328))
@@ -40,13 +41,12 @@ presenter_screen::presenter_screen() : wxFrame(NULL, -1, wxT(APPNAME), wxDefault
     wxSize tb_size = toolbar_->GetSize();
 
     splitter_ = new wxSplitterWindow(this, wxID_ANY, wxPoint(0, 0), GetClientSize());
-
+    
     // TODO: make this configurable
     notes_space_    = new wxScrolledWindow(splitter_);
     slides_space_   = new wxSplitterWindow(splitter_, wxID_ANY, wxPoint(0, 0), GetClientSize());
-
-    slide_first_ = new pdf_frame(slides_space_, &pdf_);
-    slide_second_ = new pdf_frame(slides_space_, &pdf_);
+    slide_first_    = new pdf_frame(slides_space_, &pdf_);
+    slide_second_   = new pdf_frame(slides_space_, &pdf_);
 
     // HACK: subtract x to set ruler to true center
     slides_space_->SplitVertically(slide_first_, slide_second_, GetSize().GetWidth()/2 - 10);
@@ -70,9 +70,16 @@ presenter_screen::presenter_screen() : wxFrame(NULL, -1, wxT(APPNAME), wxDefault
 void presenter_screen::reset_controls(bool active)
 {
     toolbar_->EnableTool(wxID_OK, active);
-    toolbar_->EnableTool(wxID_CONTEXT_HELP, false);
+    toolbar_->EnableTool(wxID_CONTEXT_HELP, !notes_data_.empty());
+    toolbar_->ToggleTool(wxID_CONTEXT_HELP, false);
     toolbar_->EnableTool(wxID_BACKWARD, false);
     toolbar_->EnableTool(wxID_FORWARD, active);
+
+    if (splitter_->IsSplit())
+    {
+        splitter_->Unsplit();
+        notes_space_->Hide();
+    }
 }
 
 void presenter_screen::on_toolbar(wxCommandEvent &e)
@@ -87,6 +94,11 @@ void presenter_screen::on_toolbar(wxCommandEvent &e)
             try
             {
                 pdf_.load(file->GetPath().char_str());
+
+                std::string notes_file = file->GetPath().char_str();
+                notes_file += ".txt";
+                notes_data_.read(notes_file.c_str());
+
                 toolbar_->EnableTool(wxID_OK, true);
                 toolbar_->EnableTool(wxID_FORWARD, true);
 
@@ -118,22 +130,46 @@ void presenter_screen::on_toolbar(wxCommandEvent &e)
     }
     else if (e.GetId() == wxID_FORWARD)
     {
+        next_slide();   
+    }
+    else if (e.GetId() == wxID_BACKWARD)
+    {
+        prev_slide();
+    }
+    else if (e.GetId() == wxID_CONTEXT_HELP)
+    {
+        toggle_notes();
+    }
+}
+
+void presenter_screen::next_slide()
+{
+    if (slide_nr_ < pdf_.page_count())
+    {
         toolbar_->EnableTool(wxID_BACKWARD, true);
         toolbar_->EnableTool(wxID_FORWARD, !(slide_nr_ == pdf_.page_count() - 1));
         ++slide_nr_;
         refresh();
     }
-    else if (e.GetId() == wxID_BACKWARD)
+}
+
+void presenter_screen::prev_slide()
+{
+    if (slide_nr_ > 1)
     {
         toolbar_->EnableTool(wxID_FORWARD, true);
         toolbar_->EnableTool(wxID_BACKWARD, !(slide_nr_ == 2));
         --slide_nr_;
         refresh();
     }
-    else if (e.GetId() == wxID_CONTEXT_HELP)
-    {
-        toggle_notes();
-    }
+}
+
+void presenter_screen::on_key(wxKeyEvent &e)
+{
+    if (e.GetKeyCode() == WXK_LEFT)
+        prev_slide();
+    else if (e.GetKeyCode() == WXK_RIGHT)
+        next_slide();
 }
 
 void presenter_screen::toggle_presentation()
@@ -181,6 +217,16 @@ void presenter_screen::load_slide(size_t slide_nr)
     Refresh();
 }
 
+void presenter_screen::load_note(size_t slide_nr)
+{
+    if (notes_data_.good())
+    {
+        wxString wx_note(notes_data_.note(slide_nr).c_str(), wxConvUTF8);
+        notes_->Clear();
+        notes_->WriteText(wx_note);
+    }
+}
+
 void presenter_screen::refresh_title()
 {
     std::stringstream title;
@@ -205,6 +251,7 @@ void presenter_screen::refresh_title()
 void presenter_screen::refresh()
 {
     load_slide(slide_nr_);
+    load_note(slide_nr_);
     refresh_title();
     refresh_slide_screen();
 }
