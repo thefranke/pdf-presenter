@@ -47,3 +47,4 @@ void slide_screen::load_slide(size_t slide_nr)
 {
     pdf_->load_slide(slide_nr);
 }
+

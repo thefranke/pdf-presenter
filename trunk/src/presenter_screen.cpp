@@ -6,6 +6,7 @@
 #include <boost/lexical_cast.hpp>
 
 #include "tools.h"
+#include "resource.h"
 
 BEGIN_EVENT_TABLE(presenter_screen, wxFrame)
     EVT_MENU(wxID_ANY, presenter_screen::on_toolbar)
@@ -265,3 +266,4 @@ void presenter_screen::refresh_slide_screen()
         presentation_->SetTitle(GetTitle());
     }
 }
+

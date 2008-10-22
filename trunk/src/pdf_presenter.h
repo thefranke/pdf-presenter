@@ -10,3 +10,4 @@ Feel free to contact me at tob.franke@googlemail.com.\n\
 #define AUTHOR "Tobias Alexander Franke"
 #define COPYRIGHT "(c) 2008 Tobias Alexander Franke"
 #define WEBSITE "http://code.google.com/p/pdf-presenter"
+

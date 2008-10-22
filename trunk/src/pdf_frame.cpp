@@ -53,3 +53,4 @@ void pdf_frame::refresh()
 {
     load_slide(slide_nr_);
 }
+

@@ -26,7 +26,7 @@ public:
 bool pdf_presenter::OnInit()
 {
     // initialize global parameters for poppler... who writes such aweful code?
-    globalParams = new GlobalParams("");
+    globalParams = new GlobalParams();
 
     if (!globalParams) 
         return false;
