@@ -58,3 +58,4 @@ public:
 
     DECLARE_EVENT_TABLE()
 };
+

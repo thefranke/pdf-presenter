@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <string>
+#include <stdexcept>
 
 pdf_notes::pdf_notes() : can_be_empty_(false)
 {

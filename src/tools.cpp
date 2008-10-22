@@ -56,3 +56,4 @@ void render_pdf_to(pdf_document* pdf, wxBitmap& target, size_t slide_nr, size_t 
     else
         target = wxBitmap();
 }
+

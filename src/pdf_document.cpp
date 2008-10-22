@@ -76,3 +76,4 @@ raw_image poppler_document::render(size_t page_nr, size_t& width, size_t& height
 void poppler_document::cleanup()
 {
 }
+
