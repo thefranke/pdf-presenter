@@ -19,21 +19,21 @@ presenter_screen::presenter_screen() : wxFrame(NULL, -1, wxT(APPNAME), wxDefault
 
     // setup toolbar
     toolbar_ = CreateToolBar(wxTB_FLAT | wxTB_DOCKABLE | wxTB_TEXT);
-    toolbar_->AddTool       (wxID_OPEN,         wxT("Open PDF"),            wxBITMAP(OPEN));
+    toolbar_->AddTool       (wxID_OPEN,         wxT("Open PDF"),            wxBMP(OPEN));
     toolbar_->AddSeparator  ();
 
     // there seems to be no wxID_START, but wxID_STOP, WTF?!
     // disable both, since no pdf is loaded at startup
-    toolbar_->AddCheckTool  (wxID_OK,           wxT("Toggle presentation"), wxBITMAP(RUN),  wxBITMAP(RUN_INACT));
-    toolbar_->AddCheckTool  (wxID_CONTEXT_HELP, wxT("Toggle notes"),        wxBITMAP(INFO), wxBITMAP(INFO_INACT));
+    toolbar_->AddCheckTool  (wxID_OK,           wxT("Toggle presentation"), wxBMP(RUN),  wxBMP(RUN_INACT));
+    toolbar_->AddCheckTool  (wxID_CONTEXT_HELP, wxT("Toggle notes"),        wxBMP(INFO), wxBMP(INFO_INACT));
     
     toolbar_->AddSeparator  ();
     
-    toolbar_->AddTool       (wxID_BACKWARD,     wxT("Previous slide"),      wxBITMAP(PREV), wxBITMAP(PREV_INACT));
-    toolbar_->AddTool       (wxID_FORWARD,      wxT("Next slide"),          wxBITMAP(NEXT), wxBITMAP(NEXT_INACT));
+    toolbar_->AddTool       (wxID_BACKWARD,     wxT("Previous slide"),      wxBMP(PREV), wxBMP(PREV_INACT));
+    toolbar_->AddTool       (wxID_FORWARD,      wxT("Next slide"),          wxBMP(NEXT), wxBMP(NEXT_INACT));
 
     toolbar_->AddSeparator  ();
-    toolbar_->AddTool       (wxID_ABOUT,        wxT("About"),               wxBITMAP(HELP));
+    toolbar_->AddTool       (wxID_ABOUT,        wxT("About"),               wxBMP(HELP));
 
     toolbar_->Realize();
 
@@ -96,7 +96,7 @@ void presenter_screen::on_toolbar(wxCommandEvent &e)
             {
                 pdf_.load(file->GetPath().char_str());
 
-                std::string notes_file = file->GetPath().char_str();
+                std::string notes_file(file->GetPath().char_str());
                 notes_file += ".txt";
                 notes_data_.read(notes_file.c_str());
 

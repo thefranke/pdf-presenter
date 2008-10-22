@@ -1,8 +1,22 @@
-// pdf-presenter (c) 2008 Tobias Alexander Franke. Please see license.txt.
-//{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ generated include file.
-// Used by pdfgui.rc
-//
+#ifndef WIN32
+
+#define wxBMP(x) wxBitmap(wxT(x))
+
+#define NEXT                            "../share/pdf-presenter/control_end_blue.bmp"
+#define NEXT_INACT                      "../share/pdf-presenter/control_end.bmp"
+#define PREV                            "../share/pdf-presenter/control_start_blue.bmp"
+#define PREV_INACT                      "../share/pdf-presenter/control_start.bmp"
+#define RUN                             "../share/pdf-presenter/control_play_blue.bmp"
+#define RUN_INACT                       "../share/pdf-presenter/control_play.bmp"
+#define OPEN                            "../share/pdf-presenter/control_eject_blue.bmp"
+#define HELP                            "../share/pdf-presenter/help.bmp"
+#define INFO				            "../share/pdf-presenter/comments.bmp"
+#define INFO_INACT			            "../share/pdf-presenter/comments_ia.bmp"
+
+#else
+
+#define wxBMP(x) wxBITMAP(x)
+
 #define NEXT                            102
 #define NEXT_INACT                      103
 #define PREV                            104
@@ -14,13 +28,4 @@
 #define HELP                            110
 #define NOTES                           111
 
-// Next default values for new objects
-// 
-#ifdef APSTUDIO_INVOKED
-#ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        112
-#define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1000
-#define _APS_NEXT_SYMED_VALUE           101
-#endif
 #endif
