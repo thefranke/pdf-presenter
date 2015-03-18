@@ -34,12 +34,12 @@ The following features should preferably be supported in the long run:
 
 # Related Projects
 
-* KeyJnote - A python based one screen presentation tool with pretty slide effects.
-* BOSS Presentation Tool - A GUI for KeyJnote, however not yet released.
-* Projector - Unreleased tool similar to KeyJnote.
-* Haga - An unreleased dual screen PDF presentation tool, apparently for X.
-* PDFBeamer - An unreleased dual screen PDF presentation tool, apparently for Mac OS X.
-* SplitShow - Mac OS X tool for splitview of PDF files with presenter notes.
+* [KeyJnote](http://keyjnote.sourceforge.net/) - A python based one screen presentation tool with pretty slide effects.
+* [BOSS Presentation Tool](http://sourceforge.net/projects/bosskeyjnotegui/) - A GUI for KeyJnote, however not yet released.
+* [Projector](http://sourceforge.net/projects/pdf-projector/) - Unreleased tool similar to KeyJnote.
+* [Haga](http://sourceforge.net/projects/haga/) - An unreleased dual screen PDF presentation tool, apparently for X.
+* [PDFBeamer](http://sourceforge.net/projects/pdfbeamer) - An unreleased dual screen PDF presentation tool, apparently for Mac OS X.
+* [SplitShow](http://code.google.com/p/splitshow/) - Mac OS X tool for splitview of PDF files with presenter notes.
 
 # Screenshot
 
