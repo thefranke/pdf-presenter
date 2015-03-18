@@ -1,0 +1,28 @@
+# Presenting a PDF #
+
+Open up PDF-Presenter and click on **Open PDF**. Select your presentation slides, for instance a PDF file done with Beamer, and in the two separated views in the main window you should see the first and second slide.
+
+You can navigate through your slides with the buttons **Previous slide** and **Next slide**. Click on **Toggle presentation** to open up another window showing just the current slide (left hand view). Drag this window to another screen and double click into its center, or press **Ctrl+F** or **Alt+Enter** to maximize it to fullscreen. Go back with your mouse to the other screen and navigate through your slides. As long as **Toggle presentation** remains active, the second screen will show the current slide.
+
+# Adding notes #
+
+Say you've got a slide called _my\_presentation.pdf_. If you want to create notes for that presentation, create a file called _my\_presentation.pdf.txt_. Once PDF-Presenter finds a TXT file in the same directory as the PDF with the exact same name, it will activate the **Toggle notes** button.
+
+To write notes, open up the TXT file and write down a page number in one line, and in the next line the note you want to display. Only write page numbers and notes in pairs! An example might be:
+
+```
+1
+These are the notes for the first slide.
+
+3
+Skipping notes for slide two is easy.
+
+7
+More Notes.
+
+5
+The order of the notes is not important.
+
+3
+This note is skipped yet because notes for slide 3 already exist.
+```
