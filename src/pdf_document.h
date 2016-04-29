@@ -1,4 +1,9 @@
-// pdf-presenter (c) 2008 Tobias Alexander Franke. Please see license.txt.
+/*
+ * pdf-presenter - Tobias Alexander Franke 2008
+ * For copyright and license see LICENSE
+ * http://www.tobias-franke.eu
+ */
+ 
 #pragma once
 
 #include <boost/shared_ptr.hpp>
@@ -89,6 +94,6 @@ public:
         return (doc_ && output_dev_);
     }
 
-    poppler_document() {}    
+    poppler_document() {}
     ~poppler_document() { cleanup(); }
 };

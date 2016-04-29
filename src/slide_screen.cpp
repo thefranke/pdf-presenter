@@ -1,4 +1,9 @@
-// pdf-presenter (c) 2008 Tobias Alexander Franke. Please see license.txt.
+/*
+ * pdf-presenter - Tobias Alexander Franke 2008
+ * For copyright and license see LICENSE
+ * http://www.tobias-franke.eu
+ */
+ 
 #include "slide_screen.h"
 #include "pdf_presenter.h"
 #include "tools.h"
@@ -9,7 +14,7 @@ BEGIN_EVENT_TABLE(slide_screen, wxFrame)
     EVT_LEFT_DCLICK(slide_screen::on_click)
 END_EVENT_TABLE()
 
-slide_screen::slide_screen(wxFrame* parent, pdf_document* pdf) : 
+slide_screen::slide_screen(wxFrame* parent, pdf_document* pdf) :
 wxFrame(parent, -1, wxT(APPNAME), wxDefaultPosition, wxSize(400,325)), pdf_(new pdf_frame(this, pdf))
 {
     SetBackgroundColour(wxColour(0,0,0));
@@ -47,4 +52,3 @@ void slide_screen::load_slide(size_t slide_nr)
 {
     pdf_->load_slide(slide_nr);
 }
-

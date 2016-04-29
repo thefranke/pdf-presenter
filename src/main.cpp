@@ -1,4 +1,8 @@
-// pdf-presenter (c) 2008 Tobias Alexander Franke. Please see license.txt.
+/*
+ * pdf-presenter - Tobias Alexander Franke 2008
+ * For copyright and license see LICENSE
+ * http://www.tobias-franke.eu
+ */
 
 #include <wx/wx.h>
 #include <SecurityHandler.h>
@@ -9,7 +13,7 @@ void *StandardSecurityHandler::getAuthData()
     return NULL;
 }
 
-void CDECL error(int pos, char *msg, ...) 
+void CDECL error(int pos, char *msg, ...)
 {
 }
 
@@ -28,7 +32,7 @@ bool pdf_presenter::OnInit()
     // initialize global parameters for poppler... who writes such aweful code?
     globalParams = new GlobalParams();
 
-    if (!globalParams) 
+    if (!globalParams)
         return false;
 
     globalParams->setErrQuiet(gFalse);

@@ -1,4 +1,9 @@
-// pdf-presenter (c) 2008 Tobias Alexander Franke. Please see license.txt.
+/*
+ * pdf-presenter - Tobias Alexander Franke 2008
+ * For copyright and license see LICENSE
+ * http://www.tobias-franke.eu
+ */
+ 
 #include "presenter_screen.h"
 
 #include <stdexcept>
@@ -26,9 +31,9 @@ presenter_screen::presenter_screen() : wxFrame(NULL, -1, wxT(APPNAME), wxDefault
     // disable both, since no pdf is loaded at startup
     toolbar_->AddCheckTool  (wxID_OK,           wxT("Toggle presentation"), wxBMP(RUN),  wxBMP(RUN_INACT));
     toolbar_->AddCheckTool  (wxID_CONTEXT_HELP, wxT("Toggle notes"),        wxBMP(INFO), wxBMP(INFO_INACT));
-    
+
     toolbar_->AddSeparator  ();
-    
+
     toolbar_->AddTool       (wxID_BACKWARD,     wxT("Previous slide"),      wxBMP(PREV), wxBMP(PREV_INACT));
     toolbar_->AddTool       (wxID_FORWARD,      wxT("Next slide"),          wxBMP(NEXT), wxBMP(NEXT_INACT));
 
@@ -42,7 +47,7 @@ presenter_screen::presenter_screen() : wxFrame(NULL, -1, wxT(APPNAME), wxDefault
     wxSize tb_size = toolbar_->GetSize();
 
     splitter_ = new wxSplitterWindow(this, wxID_ANY, wxPoint(0, 0), GetClientSize());
-    
+
     // TODO: make this configurable
     notes_space_    = new wxScrolledWindow(splitter_);
     slides_space_   = new wxSplitterWindow(splitter_, wxID_ANY, wxPoint(0, 0), GetClientSize());
@@ -87,7 +92,7 @@ void presenter_screen::on_toolbar(wxCommandEvent &e)
 {
     if (e.GetId() == wxID_OPEN)
     {
-        wxFileDialog* file = new wxFileDialog(this, wxT("Open a PDF Presentation"), wxEmptyString, 
+        wxFileDialog* file = new wxFileDialog(this, wxT("Open a PDF Presentation"), wxEmptyString,
             wxEmptyString, wxT("PDF File|*.pdf|All files|*.*"));
 
         if (file->ShowModal() == wxID_OK)
@@ -131,7 +136,7 @@ void presenter_screen::on_toolbar(wxCommandEvent &e)
     }
     else if (e.GetId() == wxID_FORWARD)
     {
-        next_slide();   
+        next_slide();
     }
     else if (e.GetId() == wxID_BACKWARD)
     {
@@ -243,7 +248,7 @@ void presenter_screen::refresh_title()
         title << "/";
         title << boost::lexical_cast<std::string>(static_cast<unsigned int>(pdf_.page_count()));
     }
-    
+
     wxString wx_title(title.str().c_str(), wxConvUTF8);
 
     SetTitle(wx_title);
@@ -266,4 +271,3 @@ void presenter_screen::refresh_slide_screen()
         presentation_->SetTitle(GetTitle());
     }
 }
-

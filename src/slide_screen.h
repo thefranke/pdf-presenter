@@ -1,4 +1,9 @@
-// pdf-presenter (c) 2008 Tobias Alexander Franke. Please see license.txt.
+/*
+ * pdf-presenter - Tobias Alexander Franke 2008
+ * For copyright and license see LICENSE
+ * http://www.tobias-franke.eu
+ */
+ 
 #pragma once
 #include <wx/wx.h>
 #include "pdf_document.h"

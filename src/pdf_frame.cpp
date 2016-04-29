@@ -1,4 +1,9 @@
-// pdf-presenter (c) 2008 Tobias Alexander Franke. Please see license.txt.
+/*
+ * pdf-presenter - Tobias Alexander Franke 2008
+ * For copyright and license see LICENSE
+ * http://www.tobias-franke.eu
+ */
+ 
 #include "pdf_frame.h"
 #include "tools.h"
 
@@ -7,7 +12,7 @@ BEGIN_EVENT_TABLE(pdf_frame, wxWindow)
     EVT_PAINT(pdf_frame::on_paint)
 END_EVENT_TABLE()
 
-pdf_frame::pdf_frame(wxWindow *parent, pdf_document* pdf) : 
+pdf_frame::pdf_frame(wxWindow *parent, pdf_document* pdf) :
 wxScrolledWindow(parent), pdf_(pdf)
 {
     if (parent)
@@ -38,7 +43,7 @@ void pdf_frame::load_slide(size_t slide_nr)
 {
     slide_nr_ = slide_nr;
 
-    int iw, ih; 
+    int iw, ih;
     GetClientSize(&iw,&ih);
     size_t w=iw, h=ih;
 
@@ -53,4 +58,3 @@ void pdf_frame::refresh()
 {
     load_slide(slide_nr_);
 }
-

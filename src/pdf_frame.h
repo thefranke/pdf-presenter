@@ -1,3 +1,9 @@
+/*
+ * pdf-presenter - Tobias Alexander Franke 2008
+ * For copyright and license see LICENSE
+ * http://www.tobias-franke.eu
+ */
+
 #pragma once
 #include <wx/wx.h>
 #include "pdf_document.h"
@@ -22,4 +28,3 @@ public:
 
     DECLARE_EVENT_TABLE()
 };
-

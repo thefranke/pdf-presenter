@@ -1,4 +1,9 @@
-// pdf-presenter (c) 2008 Tobias Alexander Franke. Please see license.txt.
+/*
+ * pdf-presenter - Tobias Alexander Franke 2008
+ * For copyright and license see LICENSE
+ * http://www.tobias-franke.eu
+ */
+ 
 #pragma once
 #include <wx/wx.h>
 #include <wx/splitter.h>
@@ -17,7 +22,7 @@
  *
  * To get this combo working in harmony on windows, link Poppler
  * against the modified JPEG lib from wxWidgets. After doing so
- * DCTStream.cc's str_fill_input_buffer function return type needs 
+ * DCTStream.cc's str_fill_input_buffer function return type needs
  * to be redefined to wxjpeg_boolean, otherwise the boolean sizes
  * do not match each other.
  */
@@ -58,4 +63,3 @@ public:
 
     DECLARE_EVENT_TABLE()
 };
-

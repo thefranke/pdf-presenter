@@ -1,3 +1,9 @@
+/*
+ * pdf-presenter - Tobias Alexander Franke 2008
+ * For copyright and license see LICENSE
+ * http://www.tobias-franke.eu
+ */
+
 #ifndef WIN32
 
 #define wxBMP(x) wxBitmap(wxT(x))

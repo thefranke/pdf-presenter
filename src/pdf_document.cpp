@@ -1,4 +1,9 @@
-// pdf-presenter (c) 2008 Tobias Alexander Franke. Please see license.txt.
+/*
+ * pdf-presenter - Tobias Alexander Franke 2008
+ * For copyright and license see LICENSE
+ * http://www.tobias-franke.eu
+ */
+ 
 #include "pdf_document.h"
 
 #include <stdexcept>
@@ -18,8 +23,8 @@ void poppler_document::load(const char* filename)
     if (!doc_->isOk())
         throw std::runtime_error("Couldn't open PDF file");
 
-    if (!output_dev_) 
-    {	
+    if (!output_dev_)
+    {
         // black background
         SplashColor bg_color;
         bg_color[0] = 0;
@@ -76,4 +81,3 @@ raw_image poppler_document::render(size_t page_nr, size_t& width, size_t& height
 void poppler_document::cleanup()
 {
 }
-

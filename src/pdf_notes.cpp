@@ -1,4 +1,10 @@
-#include "pdf_notes.h"
+/*
+ * pdf-presenter - Tobias Alexander Franke 2008
+ * For copyright and license see LICENSE
+ * http://www.tobias-franke.eu
+ */
+
+ #include "pdf_notes.h"
 
 #include <fstream>
 #include <string>

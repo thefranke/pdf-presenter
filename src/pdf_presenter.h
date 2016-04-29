@@ -1,4 +1,9 @@
-// pdf-presenter (c) 2008 Tobias Alexander Franke. Please see license.txt.
+/*
+ * pdf-presenter - Tobias Alexander Franke 2008
+ * For copyright and license see LICENSE
+ * http://www.tobias-franke.eu
+ */
+ 
 #pragma once
 
 #define APPNAME "PDF Presenter"
@@ -10,4 +15,3 @@ Feel free to contact me at tob.franke@googlemail.com.\n\
 #define AUTHOR "Tobias Alexander Franke"
 #define COPYRIGHT "(c) 2008 Tobias Alexander Franke"
 #define WEBSITE "http://code.google.com/p/pdf-presenter"
-

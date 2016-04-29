@@ -1,4 +1,9 @@
-// pdf-presenter (c) 2008 Tobias Alexander Franke. Please see license.txt.
+/*
+ * pdf-presenter - Tobias Alexander Franke 2008
+ * For copyright and license see LICENSE
+ * http://www.tobias-franke.eu
+ */
+ 
 #include <wx/bitmap.h>
 #include "pdf_document.h"
 
@@ -21,4 +26,3 @@ double get_pdf_doc_dpi(double media_width, double media_height, size_t pixels_wi
  * \brief Shortcut to render a PDF page with a given maximum height/width into a wxBitmap.
  */
 void render_pdf_to(pdf_document* pdf, wxBitmap& target, size_t slide_nr, size_t w, size_t h);
-

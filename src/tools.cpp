@@ -1,4 +1,9 @@
-// pdf-presenter (c) 2008 Tobias Alexander Franke. Please see license.txt.
+/*
+ * pdf-presenter - Tobias Alexander Franke 2008
+ * For copyright and license see LICENSE
+ * http://www.tobias-franke.eu
+ */
+ 
 #include "tools.h"
 
 #include <wx/gdicmn.h>
@@ -40,7 +45,7 @@ double get_pdf_doc_dpi(double media_width, double media_height, size_t pixels_wi
     const double w = PDF_FILE_DPI * (static_cast<double>(pixels_width)/(doc_inch_w*dpi_w));
     const double h = PDF_FILE_DPI * (static_cast<double>(pixels_height)/(doc_inch_h*dpi_h));
 
-    if (w < h) 
+    if (w < h)
         return w;
     else
         return h;
@@ -56,4 +61,3 @@ void render_pdf_to(pdf_document* pdf, wxBitmap& target, size_t slide_nr, size_t 
     else
         target = wxBitmap();
 }
-
